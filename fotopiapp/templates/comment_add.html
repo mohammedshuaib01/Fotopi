@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block style_block %}
+<style>
+    body {
+        background-color: #8EC5FC;
+        background: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
+        background-attachment: fixed;
+    }
+
+    .comment-section {
+        margin: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .comment-box {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+    }
+
+    .comment-author {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .comment-author img {
+        border-radius: 50%;
+        margin-right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment-time {
+        color: #6c757d;
+        font-size: 0.9em;
+        margin-left: auto; /* Align date/time to the right */
+    }
+
+    .comment-text {
+        margin-top: 10px;
+        
+    }
+
+    button {
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .submit-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .form-container {
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<div class="container" style="padding-top: 170px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="form-container">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="submit-button">
+                        <button type="submit">POST</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

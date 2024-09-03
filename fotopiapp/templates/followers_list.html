@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block link_block %}
+{% endblock %}
+
+
+{% block style_block %}
+<style>
+    #column1 {
+        padding-bottom: 100%;
+    }
+
+    .card {
+        margin-bottom: 20px;
+        /* Adds consistent spacing between cards */
+    }
+</style>
+{% endblock %}
+
+
+{% block body_block %}
+
+<div class="container-fluid" style="margin-top: 150px;">
+    <div class="row">
+        {% for fo in followers %}
+        <div class="col-sm-12 col-md-6 col-lg-3" id="column1">
+            <div class="card">
+                <div class="card-body text-center">
+                    {%if fo.profil_pic%}
+                    <img src="{{fo.profil_pic.url}}" alt="" width="70px" height="70px" style="border-radius: 100px;">
+                    {%else%}
+                    <img class="profile-small" src="{% static 'image/profilepic.png' %}" alt="Avatar" width="70px"
+                        height="h-auto">
+                    {% endif %}
+                    <h5 class="card-title">{{ fo.user }}</h5>
+
+                    <form action="{% url 'follow' fo.id %}" method="post">
+                        {% csrf_token %}
+                        {% if fo in request.user.profile.following.all %}
+                           <button type="submit" class="btn btn-primary" name="action" value="unfollow">Unfollow</button>
+                        {% else %}
+                           <button type="submit" class="btn btn-primary" name="action" value="follow">Follow</button>
+                        {% endif %}
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        
+
+
+    </div>
+</div>
+
+{% endblock %}

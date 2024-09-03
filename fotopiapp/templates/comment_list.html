@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block link_block %}
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+{% endblock %}
+
+
+{% block style_block %}
+
+<style>
+    body {
+        background-color: #8EC5FC;
+        background: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
+        background-attachment: fixed;
+    }
+
+    .comment-section {
+        margin: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .comment-box {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+    }
+
+    .comment-author {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .comment-author img {
+        border-radius: 50%;
+        margin-right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .comment-time {
+        color: #6c757d;
+        font-size: 0.9em;
+        margin-left: auto; /* Align date/time to the right */
+    }
+
+    .comment-text {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<body>
+    <div class="container" style="padding-top: 100px;">
+        <div class="comment-section">
+            <h3>Comments</h3>
+
+            {% for p in data %}
+            <div class="comment-box">
+                <div class="comment-author">
+                    {% if p.user.profile.profil_pic %}
+                    <img src="{{ p.user.profile.profil_pic.url  }}" alt="User Image">
+                    {% else %}
+                    <img src="{% static 'image/profilepic.png' %}" alt="Default Image">
+                    {% endif %}
+                    <div>
+                        <span>{{ p.user }}</span>
+                        <span class="comment-time">{{ p.created_date }}</span>
+                    </div>
+                </div>
+                <div class="comment-text">{{ p.text }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+{% endblock %}

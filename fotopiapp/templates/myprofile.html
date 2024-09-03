@@ -1,0 +1,198 @@
+{%extends 'base.html'%}
+
+{% load static %}
+
+
+{% block link_block%}
+
+{% endblock %}
+
+
+{% block style_block %}
+<style>
+    /* Add your custom styles here */
+
+    /* Adjustments for the profile header */
+    .profile-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-image {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .profile-stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 10px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .user-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .user-name {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .post-container {
+        margin: 20px 0;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .post-image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #000000, #525252);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #525252, #000000);
+    }
+
+
+
+    /* Instagram-like button styles */
+    .like-btn {
+        background-color: transparent;
+        border: none;
+        /* Red border */
+        margin: 10px;
+        font-size: 35px;
+        cursor: pointer;
+    }
+
+    .like-btn.active {
+        color: rgb(255, 0, 0);
+    }
+
+    .like-btn i {
+        color: red;
+        /* Red color by default */
+    }
+
+
+    .like-btn:focus {
+        outline: none;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+</style>
+
+
+{% endblock %}
+
+
+
+
+{% block body_block %}
+
+<body>
+
+    <div class="container">
+        <div class="profile-header" style="padding-top: 200px;">
+            <img src="{% if data.profil_pic %}{{ data.profil_pic.url }}{% else %}{% static 'image/profilepic.png' %}{% endif %}"
+                alt="Profile Image" class="profile-image rounded-circle">
+            <h1>{{ data.user }}</h1>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <h2><b>{{ request.user.profile.followed_by.count }}</b></h2>
+                    <a href="{% url 'followers-list' %}">
+                        <h4>Followers</h4>
+                    </a>
+                </div>
+                <div class="stat-item">
+                    <p></p>
+                </div>
+                <div class="stat-item">
+                    <h2><b>{{ request.user.profile.following.count }}</b></h2>
+                    <a href="{% url 'following-list' %}">
+                        <h4>Following</h4>
+                    </a>
+                </div>
+            </div>
+            <p>{{ data.bio }}</p>
+            <p>{{ data.address }}</p>
+            <p>Date of birth : {{ data.dob }}</p>
+            <a href="{% url 'profile-update' %}" class="btn btn-primary">Edit Profile</a>
+        </div>
+
+
+        <div class="container w-100">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    {% for pr in data_2 %}
+                    <div class="post-container mx-auto">
+                        <div class="user-info">
+                            <img src="{{ pr.user.profile.profil_pic.url }}" alt="User Icon" class="user-icon">
+                            <div class="user-name">{{pr.user}}</div>
+                        </div>
+                        <p style="color: #979599;">{{ pr.created_date}}</p>
+                        <img src="{{ pr.post_image.url }}" alt="Post Image" class="post-image">
+                        <p>{{ pr.title}}</p>
+                        <div class="interaction-bar d-flex align-items-center">
+                            <form action="{% url 'like' pr.id %}" method="post">
+                                {% csrf_token %}
+                                {% if request.user in pr.liked_by.all %}
+                                <button type="submit" class="like-btn active" name="action" value="unlike">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                                {{ pr.liked_by.all.count }} Likes
+                                {% else %}
+                                <button type="submit" class="like-btn" name="action" value="like">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                                {{ pr.liked_by.all.count }} Likes
+                                {% endif %}
+                            </form>
+                            <button class="comment-add">
+                                <a href="{% url 'comment-add' pr.id %}"> <i class="fa-solid fa-plus"></i></a>
+                            </button>
+                            <button class="comment-list">
+                                <a href="{% url 'comment-list' pr.id %}"><i class="fa-regular fa-comment"></i></a>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+    </div>
+
+
+</body>
+{% endblock %}
+
+</html>

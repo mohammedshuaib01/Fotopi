@@ -1,0 +1,39 @@
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-3"></div>
+        <div class="col-6">
+            {% for pr in data_2 %}
+            <div class="post-container">
+                <div class="user-info d-flex align-items-center">
+                    <img src="{{ pr.user.profile.profil_pic.url }}" alt="User Icon"
+                        class="user-icon rounded-circle">
+                    <div class="user-name">{{ pr.user }}</div>
+                </div>
+                <p style="color: #979599;">{{ pr.created_date }}</p>
+                <img src="{{ pr.post_image.url }}" alt="Post Image" class="post-image">
+                <p>{{ pr.title }}</p>
+                <button class="like-btn" onclick="toggleLike(this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+
+                <button class="comment-list" >
+                    <a href="{% url 'comment-add' pr.id %}">  <i class="fa-regular fa-comment"></i></a>
+                  </button>
+      
+                  <button class="comment-list" >
+                      <a href="{% url 'comment-list' pr.id %}">View All Comments</i></a>
+                    </button>
+
+                <!-- <div class="comment-section">
+                    <textarea placeholder="Add a comment..." rows="3"></textarea>
+                    <button class="btn btn-dark comment-btn">Post Comment</button>
+                </div> -->
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-3"></div>
+
+    </div>
+</div>

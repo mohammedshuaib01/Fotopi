@@ -1,0 +1,211 @@
+{%extends 'base.html'%}
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shareflair</title>
+
+
+    <script src="https://kit.fontawesome.com/220c438268.js" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> -->
+
+    
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
+            padding: 20px;
+        }
+
+        .post-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /* Instagram-like button styles */
+        .like-btn {
+            background-color: transparent;
+            border: none;
+            /* Red border */
+            margin: 10px;
+            font-size: 35px;
+            cursor: pointer;
+        }
+
+        .like-btn.active {
+            color: rgb(255, 0, 0);
+        }
+
+        .like-btn i {
+            color: red;
+            /* Red color by default */
+        }
+
+
+        .like-btn:focus {
+            outline: none;
+        }
+    </style>
+
+
+
+    
+</head>
+
+{% block body_block %}
+
+<body>
+
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Post Your Story</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+
+                    {%csrf_token%}
+
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="">title</label>
+                            <input type="text" class="form-control" name="title">
+                        </div>
+                        <div class="mb-3">
+                            <input type="file" class="form-control" name="post_image" accept="image/*">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">post</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--stories start-->
+    <div class="d-flex  container w-50 mt-5">
+        {%for st in stories%}
+        <div class="d-flex flex-column mt-5">
+            <article
+                class="border rounded-circle bg-danger text-white  me-2 d-flex align-items-center justify-content-center"
+                style="height: 100px;width: 100px; ">
+
+
+                {%if st.post_image%}
+                <img src="{{st.post_image.url}}" alt="" style="width: 100px; height: 100px;"
+                    class="border rounded-circle">
+
+
+
+                {%endif%}
+            </article>
+            <div class="text-center fw-bolder">{{st.user}}</div>
+        </div>
+        {%endfor%}
+    </div>
+
+
+    <!--stories ends-->
+
+    <!-- {%if form.errors%} -->
+    <!-- {{form.errors}} -->
+
+    <!-- {%endif%} -->
+
+    <div class="container d-flex flex-column justify-content-center align-items-center mt-5">
+
+
+        {% for po in data %}
+        <div class="post-container">
+
+
+            <div class="user-info">
+                <img src="{{ po.user.profile.profil_pic.url }}" alt="User Icon" class="user-icon">
+                <div class="user-name">{{po.user}}</div>
+
+            </div>
+
+            <p style="color: #979599;">{{ po.created_date}}</p>
+            <img src="{{ po.post_image.url }}" alt="Post Image" class="post-image">
+            <p>{{ po.title}}</p>
+
+            <div class="interaction-bar d-flex align-items-center">
+                <form action="{% url 'like' po.id %}" method="post">
+                    {% csrf_token %}
+                    {% if request.user in po.liked_by.all %}
+                    <button type="submit" class="like-btn active" name="action" value="unlike">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                    {{ po.liked_by.all.count }} Likes
+                    {% else %}
+                    <button type="submit" class="like-btn" name="action" value="like">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                    {{ po.liked_by.all.count }} Likes
+                    {% endif %}
+                </form>
+
+                <button class="comment-add">
+                    <a href="{% url 'comment-add' po.id %}"> <i class="fa-solid fa-plus"></i></a>
+                </button>
+
+                <button class="comment-list">
+                    <a href="{% url 'comment-list' po.id %}"><i class="fa-regular fa-comment"></i></a>
+                </button>
+            </div>
+
+
+
+        </div>
+        {% endfor %}
+
+
+        <!-- post section end -->
+    </div>
+
+
+
+</body>
+{% endblock %}
+
+</html>
