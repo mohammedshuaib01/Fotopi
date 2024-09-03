@@ -62,7 +62,7 @@ class HomeView(View):
     def get(self,request,*args,**kwargs):
         qs=Post.objects.all().order_by("-created_date")
         qs_2=UserProfile.objects.get(user=request.user)
-        return render(request,"home.html",{"data":qs,"data2":qs_2})
+        return render(request,"index.html",{"data":qs,"data2":qs_2})
 
 
 @method_decorator(decs,name="dispatch")
